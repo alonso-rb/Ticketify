@@ -11,19 +11,14 @@ import org.springframework.beans.factory.annotation.Value;
 @Configuration
 public class MailSenderConfig {
 
-	@Value("{spring.mail.username}")
-	private String mail;
-	
-	@Value("{spring.mail.password}")
-	private String password;
 	
 	@Bean("javaMailSender")
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
         sender.setHost("smtp.gmail.com");
         sender.setPort(587);
-        sender.setUsername(mail);
-        sender.setPassword(password);
+        sender.setUsername("ticketifysv@gmail.com");
+        sender.setPassword("rvdjmqsvtwckpjpe");
 
         Properties props = sender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
