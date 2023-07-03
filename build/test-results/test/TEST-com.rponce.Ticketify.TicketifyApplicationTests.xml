@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.rponce.Ticketify.TicketifyApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-07-03T21:27:55" hostname="DESKTOP-VJT8O66" time="1.844">
+<testsuite name="com.rponce.Ticketify.TicketifyApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-07-03T22:27:51" hostname="DESKTOP-VJT8O66" time="1.231">
   <properties/>
-  <testcase name="contextLoads()" classname="com.rponce.Ticketify.TicketifyApplicationTests" time="1.844"/>
-  <system-out><![CDATA[15:27:36.796 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.rponce.Ticketify.TicketifyApplicationTests]: TicketifyApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-15:27:37.143 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.rponce.Ticketify.TicketifyApplication for test class com.rponce.Ticketify.TicketifyApplicationTests
+  <testcase name="contextLoads()" classname="com.rponce.Ticketify.TicketifyApplicationTests" time="1.231"/>
+  <system-out><![CDATA[16:27:33.197 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.rponce.Ticketify.TicketifyApplicationTests]: TicketifyApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:27:33.480 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.rponce.Ticketify.TicketifyApplication for test class com.rponce.Ticketify.TicketifyApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -13,24 +13,24 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.1.1)
 
-2023-07-03T15:27:38.567-06:00  INFO 22936 --- [    Test worker] c.r.Ticketify.TicketifyApplicationTests  : Starting TicketifyApplicationTests using Java 17.0.7 with PID 22936 (started by river in C:\Users\river\OneDrive\Escritorio\NCapas\Ticketify)
-2023-07-03T15:27:38.572-06:00  INFO 22936 --- [    Test worker] c.r.Ticketify.TicketifyApplicationTests  : No active profile set, falling back to 1 default profile: "default"
-2023-07-03T15:27:41.036-06:00  INFO 22936 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-07-03T15:27:41.445-06:00  INFO 22936 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 378 ms. Found 14 JPA repository interfaces.
-2023-07-03T15:27:43.175-06:00  INFO 22936 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2023-07-03T15:27:45.203-06:00  INFO 22936 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7a66c35a
-2023-07-03T15:27:45.207-06:00  INFO 22936 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2023-07-03T15:27:45.360-06:00  INFO 22936 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-07-03T15:27:45.616-06:00  INFO 22936 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.5.Final
-2023-07-03T15:27:45.624-06:00  INFO 22936 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
-2023-07-03T15:27:46.168-06:00  INFO 22936 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2023-07-03T15:27:46.690-06:00  INFO 22936 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2023-07-03T15:27:48.492-06:00  INFO 22936 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2023-07-03T15:27:51.529-06:00  INFO 22936 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-07-03T15:27:51.542-06:00  INFO 22936 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-07-03T15:27:53.764-06:00  WARN 22936 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-07-03T15:27:54.763-06:00  INFO 22936 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@36995784, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@58dd1d0c, org.springframework.security.web.context.SecurityContextHolderFilter@4400026, org.springframework.security.web.header.HeaderWriterFilter@5889e697, org.springframework.web.filter.CorsFilter@740530b, org.springframework.security.web.authentication.logout.LogoutFilter@157a2c86, com.rponce.Ticketify.utils.JWTTokenFilter@23b3afb4, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@2aac60b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7c08461b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@60be9fdf, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3dd8b40e, org.springframework.security.web.session.SessionManagementFilter@77587422, org.springframework.security.web.access.ExceptionTranslationFilter@2e895acb, org.springframework.security.web.access.intercept.AuthorizationFilter@16df0ebd]
-2023-07-03T15:27:55.613-06:00  INFO 22936 --- [    Test worker] c.r.Ticketify.TicketifyApplicationTests  : Started TicketifyApplicationTests in 17.969 seconds (process running for 21.671)
+2023-07-03T16:27:34.709-06:00  INFO 8976 --- [    Test worker] c.r.Ticketify.TicketifyApplicationTests  : Starting TicketifyApplicationTests using Java 17.0.7 with PID 8976 (started by river in C:\Users\river\OneDrive\Escritorio\NCapas\Ticketify)
+2023-07-03T16:27:34.713-06:00  INFO 8976 --- [    Test worker] c.r.Ticketify.TicketifyApplicationTests  : No active profile set, falling back to 1 default profile: "default"
+2023-07-03T16:27:37.065-06:00  INFO 8976 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-03T16:27:37.427-06:00  INFO 8976 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 341 ms. Found 14 JPA repository interfaces.
+2023-07-03T16:27:39.727-06:00  INFO 8976 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-07-03T16:27:43.474-06:00  INFO 8976 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3457cc8d
+2023-07-03T16:27:43.480-06:00  INFO 8976 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-07-03T16:27:43.593-06:00  INFO 8976 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-03T16:27:43.780-06:00  INFO 8976 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.5.Final
+2023-07-03T16:27:43.787-06:00  INFO 8976 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-07-03T16:27:44.299-06:00  INFO 8976 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-07-03T16:27:44.731-06:00  INFO 8976 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-07-03T16:27:46.124-06:00  INFO 8976 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-07-03T16:27:48.516-06:00  INFO 8976 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-03T16:27:48.526-06:00  INFO 8976 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-03T16:27:50.337-06:00  WARN 8976 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-03T16:27:51.128-06:00  INFO 8976 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@36995784, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@58dd1d0c, org.springframework.security.web.context.SecurityContextHolderFilter@4400026, org.springframework.security.web.header.HeaderWriterFilter@5889e697, org.springframework.web.filter.CorsFilter@740530b, org.springframework.security.web.authentication.logout.LogoutFilter@157a2c86, com.rponce.Ticketify.utils.JWTTokenFilter@23b3afb4, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@2aac60b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7c08461b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@60be9fdf, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3dd8b40e, org.springframework.security.web.session.SessionManagementFilter@77587422, org.springframework.security.web.access.ExceptionTranslationFilter@2e895acb, org.springframework.security.web.access.intercept.AuthorizationFilter@16df0ebd]
+2023-07-03T16:27:51.865-06:00  INFO 8976 --- [    Test worker] c.r.Ticketify.TicketifyApplicationTests  : Started TicketifyApplicationTests in 17.903 seconds (process running for 21.299)
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
