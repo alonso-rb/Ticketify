@@ -171,7 +171,7 @@ public class UserController {
 			UserInfoDTO infoUser = new UserInfoDTO();
 			infoUser.setToken(token.getContent());
 			infoUser.setRoleName(listToShow);
-			
+			infoUser.setId(userToCheck.getUuid().toString());
 			return new ResponseEntity<>(infoUser, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

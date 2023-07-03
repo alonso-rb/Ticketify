@@ -105,7 +105,7 @@ public class TransactionController {
 		}
 		
 		try {
-			transactionService.SaveNewTransaction(userTo, userFrom, info.getHashEmail(), null, ticket);
+			transactionService.SaveNewTransaction(userTo, userFrom, info.getHashEmail(), false, ticket);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();

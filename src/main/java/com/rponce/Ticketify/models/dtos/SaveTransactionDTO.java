@@ -16,6 +16,7 @@ public class SaveTransactionDTO {
 	
 	private Boolean accepted;
 	
+	@NotEmpty
 	private String ticketCode;
 
 }
