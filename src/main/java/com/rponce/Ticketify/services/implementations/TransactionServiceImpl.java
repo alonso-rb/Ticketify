@@ -19,15 +19,15 @@ public class TransactionServiceImpl implements TransactionService {
 	private TransactionRepository transactionRep;
 
 	@Override
-	public void SaveNewTransaction(User userTo, User userFrom, String hashEmail, Boolean accepted, Ticket ticket)
+	public void SaveNewTransaction(User userTo, User userFrom, String hashEmail, Ticket ticket, Boolean accepted)
 			throws Exception {
 		Transaction newTransaction = new Transaction();
 		
 		newTransaction.setUserTo(userTo);
 		newTransaction.setUserFrom(userFrom);
 		newTransaction.setHashEmail(hashEmail);
-		newTransaction.setAccepted(accepted);
 		newTransaction.setTicket(ticket);
+		newTransaction.setAccepted(accepted);
 		
 		transactionRep.save(newTransaction);
 	}
