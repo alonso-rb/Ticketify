@@ -79,7 +79,7 @@ public class TransactionController {
 		UUID uuid = UUID.fromString(info.getTicketCode());
 		User userFrom = userService.FindOneUserById(info.getUserCodeFrom());
 		User userTo = userService.FindOneUserById(info.getUserCodeTo());
-		String userEmail = userTo.getEmail();
+		String userEmail = userFrom.getEmail();
 		Ticket ticket = ticketService.getTicketByID(uuid);
 		Integer hash = new Date().hashCode();
 		String hashEmail = hash.toString();
