@@ -14,6 +14,6 @@ import com.rponce.Ticketify.models.entities.User;
 public interface OrderRepository extends JpaRepository<Order, UUID>{
 	Order findOneByUuid(UUID uuid);
 	Order findOneByUser(User user);
-	Order findOneByUserAndPurchaseDateAndTotal(User user, Date purchaseDate, Float total);
+	Order findFirstOrderByUserAndPurchaseDateAndTotal(User user, Date purchaseDate, Float total);
 	Page<Order> findAll(Pageable pageable);
 }
