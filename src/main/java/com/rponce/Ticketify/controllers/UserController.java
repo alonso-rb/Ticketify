@@ -163,7 +163,7 @@ public class UserController {
 			ReturnUserRoleDTO userRolesList = new ReturnUserRoleDTO();
 			userRolesList.setRoleName(u.getRole().getRole());
 			
-			listToShow.add(userRolesList);
+			listToShow.add(userRolesList.getRoleName());
 		});
 		
 		try {
@@ -204,7 +204,7 @@ public class UserController {
 			ReturnUserRoleDTO userRolesList = new ReturnUserRoleDTO();
 			userRolesList.setRoleName(u.getRole().getRole());
 
-			listToShow.add(userRolesList);
+			listToShow.add(userRolesList.getRoleName());
 		});
 
 		try {
