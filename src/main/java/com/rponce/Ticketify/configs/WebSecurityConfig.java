@@ -73,7 +73,7 @@ public class WebSecurityConfig {
 	    http.authorizeHttpRequests(auth -> 
 	    	auth
 	    		.requestMatchers("/user/auth/**", "/user/request-recuperate", "/user/recuperate-password", 
-	    				"/user/email/**", "/user/id/**").permitAll()
+	    				"/user/email/**", "/user/id/**", "/events/all").permitAll()
 	    		.anyRequest().authenticated()
 	    );
 	    
