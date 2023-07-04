@@ -43,7 +43,7 @@ public class EventController {
 	@Autowired
 	private TierService tierService;
 	
-	@GetMapping("/")
+	@GetMapping("/all")
 	public ResponseEntity<?> findAllEvents(@RequestParam(defaultValue = "") String title,
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size){
