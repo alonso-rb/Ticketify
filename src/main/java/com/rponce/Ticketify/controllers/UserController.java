@@ -156,7 +156,7 @@ public class UserController {
 					);
 		}
 		
-		List<ReturnUserRoleDTO> listToShow = new ArrayList<>();
+		List<String> listToShow = new ArrayList<>();
 		List<UserXRole> userxroleList = userxroleService.findByUser(userToCheck);
 		
 		userxroleList.forEach(u-> {
@@ -197,7 +197,7 @@ public class UserController {
 					);
 		}
 
-		List<ReturnUserRoleDTO> listToShow = new ArrayList<>();
+		List<String> listToShow = new ArrayList<>();
 		List<UserXRole> userxroleList = userxroleService.findByUser(userToCheck);
 
 		userxroleList.forEach(u-> {
