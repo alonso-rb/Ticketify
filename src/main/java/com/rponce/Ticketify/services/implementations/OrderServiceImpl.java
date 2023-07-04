@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order findCurrentOrder(Float total, User user, Date purchaseDate) {
 		
-		return orderRepository.findOneByUserAndPurchaseDateAndTotal(user, purchaseDate, total);
+		return orderRepository.findFirstOrderByUserAndPurchaseDateAndTotal(user, purchaseDate, total);
 	}
 
 	@Override
