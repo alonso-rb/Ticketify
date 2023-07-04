@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoDTO {
 	
-	private List<ReturnUserRoleDTO> RoleName;
+	private List<String> RoleName;
 	
 	private String token;
 
