@@ -43,9 +43,8 @@ public class TicketQRController {
 	@Autowired
 	private TicketService ticketService;
 	
-	@PostMapping("/generate/{ticketid}")
-	private ResponseEntity<?> SaveTicketQR(@PathVariable(name = "ticketid") String ticketid, 
-			@ModelAttribute @Valid SaveTicketQRDTO info, 
+	@PostMapping("/generate")
+	private ResponseEntity<?> SaveTicketQR(@ModelAttribute @Valid SaveTicketQRDTO info, 
 			BindingResult validations){
 		
 		Integer qr1 = new Date().hashCode();
@@ -58,7 +57,7 @@ public class TicketQRController {
 		info.setExchangeDate(date);
 		info.setActive(true);
 		
-		UUID uuid = UUID.fromString(ticketid);
+		UUID uuid = UUID.fromString(info.getTicketId());
 		Ticket ticketId = ticketService.getTicketByID(uuid);
 		
 		if(validations.hasErrors()) {
@@ -68,7 +67,7 @@ public class TicketQRController {
 		
 		try {
 			ticketqrService.SaveTicketQR(info, ticketId);
-			TicketQR qrticket = ticketqrService.getTicketQRByQR(qrhashed);
+			TicketQR qrticket = ticketqrService.getTicketQRByQR(info.getQr());
 
 			TicketQRInfoDTO response = new TicketQRInfoDTO();
 			response.setQr(qrticket.getQr());
