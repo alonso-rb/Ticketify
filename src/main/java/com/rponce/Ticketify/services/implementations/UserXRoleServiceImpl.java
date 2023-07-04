@@ -29,6 +29,7 @@ public class UserXRoleServiceImpl implements UserXRoleService {
 		newUserXRole.setAssignationDate(date);
 		newUserXRole.setRole(role);
 		newUserXRole.setUser(user);
+		newUserXRole.setStatus(true);
 		
 		userXRolerepository.save(newUserXRole);
 		

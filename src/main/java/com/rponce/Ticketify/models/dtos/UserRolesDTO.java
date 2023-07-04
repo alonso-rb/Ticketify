@@ -23,4 +23,6 @@ public class UserRolesDTO {
 	@NotEmpty
 	private Date dateAssigned;
 
+	@NotEmpty
+	private Boolean status;
 }

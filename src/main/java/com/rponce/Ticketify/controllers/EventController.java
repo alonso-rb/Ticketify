@@ -111,9 +111,11 @@ public class EventController {
 		}
 	}
 	
-	@GetMapping("/{title}")
-	public ResponseEntity<?> findOneEvent(@PathVariable(name = "title") String title){
-		Event findevent = eventService.findByTitle(title);
+	@GetMapping("/{id}")
+	public ResponseEntity<?> findOneEvent(@PathVariable(name = "id") String id){
+		UUID id_event = UUID.fromString(id);
+
+		Event findevent = eventService.findOneById(id_event);
 
 		if(findevent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

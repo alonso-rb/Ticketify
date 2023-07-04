@@ -121,6 +121,7 @@ public class RoleController {
 			userRolesList.setEmail(u.getUser().getEmail());
 			userRolesList.setRoleAssigned(u.getRole().getRole());
 			userRolesList.setDateAssigned(u.getAssignationDate());
+			userRolesList.setStatus(u.getStatus());
 			
 			listToShow.add(userRolesList);
 		});

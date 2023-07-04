@@ -9,7 +9,7 @@ import com.rponce.Ticketify.models.entities.TicketQR;
 
 
 public interface TicketQRService {
-	public void SaveUserQR(SaveTicketQRDTO info, Ticket ticketId) throws Exception;
+	public void SaveTicketQR(SaveTicketQRDTO info, Ticket ticketId) throws Exception;
 	List<TicketQR> GetTicketQRByTicketId(UUID TicketId);
 	TicketQR getTicketQRByQR(String qr);
 }

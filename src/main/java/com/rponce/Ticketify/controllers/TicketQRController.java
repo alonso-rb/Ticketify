@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rponce.Ticketify.models.dtos.FindQRByTicketDTO;
 import com.rponce.Ticketify.models.dtos.SaveTicketQRDTO;
+import com.rponce.Ticketify.models.dtos.TicketQRInfoDTO;
 import com.rponce.Ticketify.models.entities.Ticket;
 import com.rponce.Ticketify.models.entities.TicketQR;
 import com.rponce.Ticketify.services.TicketQRService;
@@ -66,8 +67,18 @@ public class TicketQRController {
 		}
 		
 		try {
-			ticketqrService.SaveUserQR(info, ticketId);
-			return new ResponseEntity<>(info, HttpStatus.OK);
+			ticketqrService.SaveTicketQR(info, ticketId);
+			TicketQR qrticket = ticketqrService.getTicketQRByQR(qrhashed);
+
+			TicketQRInfoDTO response = new TicketQRInfoDTO();
+			response.setQr(qrticket.getQr());
+			response.setCreationDate(qrticket.getCreationDate());
+			response.setEventName(qrticket.getTicket().getTier().getEvent().getTitle());
+			response.setEventPlace(qrticket.getTicket().getTier().getEvent().getPlace());
+			response.setTierName(qrticket.getTicket().getTier().getTier());
+			response.setTime(qrticket.getTicket().getTier().getEvent().getHour());
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -36,13 +36,15 @@ public class UserXRole {
 	
 	@Column(name = "assignation_date")
 	private Date assignationDate;
+	
+	@Column(name = "status")
+	private Boolean status;
 
-	public UserXRole(User user, Role role, Date assignationDate) {
+	public UserXRole(User user, Role role, Date assignationDate, Boolean status) {
 		super();
 		this.user = user;
 		this.role = role;
 		this.assignationDate = assignationDate;
+		this.status = status;
 	}
-	
-	
 }

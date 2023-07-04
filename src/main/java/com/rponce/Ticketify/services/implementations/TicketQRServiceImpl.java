@@ -27,7 +27,7 @@ public class TicketQRServiceImpl implements TicketQRService{
 	
 	@Override
 	@Transactional(rollbackOn = Exception.class)
-	public void SaveUserQR(SaveTicketQRDTO info, Ticket ticketId) throws Exception {
+	public void SaveTicketQR(SaveTicketQRDTO info, Ticket ticketId) throws Exception {
 		
 		TicketQR ticketqr = new TicketQR();
 		ticketqr.setCreationDate(info.getCreationDate());
