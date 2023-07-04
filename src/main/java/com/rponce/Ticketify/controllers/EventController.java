@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rponce.Ticketify.models.dtos.SaveEventDTO;
 import com.rponce.Ticketify.models.dtos.UpdateEventDTO;
+import com.rponce.Ticketify.models.dtos.FindEventDTO;
 import com.rponce.Ticketify.models.dtos.PageDTO;
 import com.rponce.Ticketify.models.entities.Category;
 import com.rponce.Ticketify.models.entities.Event;
+import com.rponce.Ticketify.models.entities.Tier;
 import com.rponce.Ticketify.services.CategoryService;
 import com.rponce.Ticketify.services.EventService;
+import com.rponce.Ticketify.services.TierService;
 
 import jakarta.validation.Valid;
 
@@ -36,6 +39,9 @@ public class EventController {
 	
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private TierService tierService;
 	
 	@GetMapping("/")
 	public ResponseEntity<?> findAllEvents(@RequestParam(defaultValue = "") String title,
@@ -68,9 +74,12 @@ public class EventController {
 		}
 	}
 	
-	@PostMapping("/update/{title}")
-	public ResponseEntity<?> updateEvent(@ModelAttribute UpdateEventDTO info, @PathVariable(name = "title") String title){
-		Event event = eventService.findByTitle(title);
+	@PostMapping("/update/{id}")
+	public ResponseEntity<?> updateEvent(@ModelAttribute UpdateEventDTO info, @PathVariable(name = "id") String id){
+
+		UUID id_event = UUID.fromString(id);
+
+		Event event = eventService.findOneById(id_event);
 		
 		if(event == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -84,9 +93,11 @@ public class EventController {
 		}
 	}
 	
-	@PostMapping("/switch/{title}")
-	public ResponseEntity<?> switchEvent(@PathVariable(name = "title") String title){
-		Event event = eventService.findByTitle(title);
+	@PostMapping("/switch/{id}")
+	public ResponseEntity<?> switchEvent(@PathVariable(name = "id") String id){
+		UUID id_event = UUID.fromString(id);
+
+		Event event = eventService.findOneById(id_event);
 		
 		if(event == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -102,11 +113,18 @@ public class EventController {
 	
 	@GetMapping("/{title}")
 	public ResponseEntity<?> findOneEvent(@PathVariable(name = "title") String title){
-		Event event = eventService.findByTitle(title);
-		
-		if(event == null) {
+		Event findevent = eventService.findByTitle(title);
+
+		if(findevent == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		
+		List<Tier> tiers = tierService.findByEvent(findevent);
+
+		FindEventDTO event = new FindEventDTO(
+				findevent,
+				tiers
+				);
 		
 		return new ResponseEntity<>(event, HttpStatus.OK);
 	}
