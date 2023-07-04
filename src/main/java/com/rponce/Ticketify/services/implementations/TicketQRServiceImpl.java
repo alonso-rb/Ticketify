@@ -49,7 +49,7 @@ public class TicketQRServiceImpl implements TicketQRService{
 	@Override
 	public TicketQR getTicketQRByQR(String qr) {
 		
-		return ticketQRRepository.findOneByQr(qr);
+		return ticketQRRepository.findFirstTicketQRByQr(qr);
 	}
 
 }
