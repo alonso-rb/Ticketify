@@ -12,7 +12,7 @@ import com.rponce.Ticketify.models.entities.User;
 
 public interface TicketRepository extends ListCrudRepository<Ticket, UUID>{
 	
-	Ticket findFirstTicketByUuid (UUID uuid);
+	Ticket findOneTicketByUuid (UUID uuid);
 	List<Ticket> findAllByUser (User user);
 	List<Ticket> findAllByTier (Tier tier);
 	List<Ticket> findAllByTierAndUser (Tier tier, User user);
