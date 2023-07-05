@@ -30,7 +30,7 @@ public class TicketServiceImpl implements TicketService{
 	public Ticket getTicketByID(UUID uuid) {
 		
 		try {
-			return ticketRepository.findOneByUuid(uuid);
+			return ticketRepository.findFirstTicketByUuid(uuid);
 		}catch(Exception e) {
 			return null;
 		}
