@@ -63,9 +63,9 @@ public class TicketQRController {
 		infoToSave.setActive(true);
 		
 		UUID uuid = UUID.fromString(info.getTicketId());
-		Ticket ticketId = ticketService.getTicketByID(uuid);
+		Ticket ticket = ticketService.getTicketByID(uuid);
 		
-		if(ticketId == null) {
+		if(ticket == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
@@ -75,7 +75,7 @@ public class TicketQRController {
 		}
 		
 		try {
-			ticketqrService.SaveTicketQR(infoToSave, ticketId);
+			ticketqrService.SaveTicketQR(infoToSave, ticket);
 			TicketQR qrticket = ticketqrService.getTicketQRByQR(infoToSave.getQr());
 
 			TicketQRInfoDTO response = new TicketQRInfoDTO();
