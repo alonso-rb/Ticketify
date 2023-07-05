@@ -60,6 +60,10 @@ public class TicketQRController {
 		UUID uuid = UUID.fromString(info.getTicketId());
 		Ticket ticketId = ticketService.getTicketByID(uuid);
 		
+		if(ticketId == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
 		if(validations.hasErrors()) {
 			return new ResponseEntity<>(errorHandler.mapErrors(validations.getFieldErrors()),
 			HttpStatus.BAD_REQUEST);
