@@ -56,9 +56,10 @@ public class TicketQRController {
 		
 		infoToSave.setQr(qrhashed);
 		
-		Date date = new Date();
-		infoToSave.setCreationDate(date);
-		infoToSave.setExchangeDate(date);
+		Date date1 = new Date();
+		infoToSave.setCreationDate(date1);
+		Date date2 = new Date();
+		infoToSave.setExchangeDate(date2);
 		infoToSave.setActive(true);
 		
 		UUID uuid = UUID.fromString(info.getTicketId());
