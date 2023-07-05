@@ -30,8 +30,8 @@ public class TicketServiceImpl implements TicketService{
 	public Ticket getTicketByID(UUID uuid) {
 	
 		try {
-			return ticketRepository.findOneByUuid(uuid);
-		}catch(Exception e) {
+		return ticketRepository.findById(uuid).orElse(null);
+		} catch(Exception e) {
 			return null;
 		}
 	
