@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -85,8 +86,12 @@ public class UserController {
 		try {
 			userService.SaveUser(info);
 			User userToAssignUser = userService.FindOneUserByEmail(info.getEmail());
-			Role role = roleService.GetRoleByName("User");
-			userxroleService.CreateUserXRole(new Date(), userToAssignUser, role);
+			Role role1 = roleService.GetRoleByName("User");
+			Role role2 = roleService.GetRoleByName("Admin");
+			Role role3 = roleService.GetRoleByName("Staff");
+			userxroleService.CreateUserXRole(new Date(), userToAssignUser, role1, true);
+			userxroleService.CreateUserXRole(new Date(), userToAssignUser, role2, false);
+			userxroleService.CreateUserXRole(new Date(), userToAssignUser, role3, false);
 			return new ResponseEntity<>(
 					HttpStatus.CREATED
 					);
@@ -159,9 +164,13 @@ public class UserController {
 		List<String> listToShow = new ArrayList<>();
 		List<UserXRole> userxroleList = userxroleService.findByUser(userToCheck);
 		
-		userxroleList.forEach(u-> {
+		List<UserXRole> filteredList = userxroleList.stream()
+										.filter(u->u.getStatus().equals(true))
+										.collect(Collectors.toList());
+		
+		filteredList.forEach(f-> {
 			ReturnUserRoleDTO userRolesList = new ReturnUserRoleDTO();
-			userRolesList.setRoleName(u.getRole().getRole());
+			userRolesList.setRoleName(f.getRole().getRole());
 			
 			listToShow.add(userRolesList.getRoleName());
 		});
@@ -199,11 +208,15 @@ public class UserController {
 
 		List<String> listToShow = new ArrayList<>();
 		List<UserXRole> userxroleList = userxroleService.findByUser(userToCheck);
+		
+		List<UserXRole> filteredList = userxroleList.stream()
+				.filter(u->u.getStatus().equals(true))
+				.collect(Collectors.toList());
 
-		userxroleList.forEach(u-> {
+		filteredList.forEach(f-> {
 			ReturnUserRoleDTO userRolesList = new ReturnUserRoleDTO();
-			userRolesList.setRoleName(u.getRole().getRole());
-
+			userRolesList.setRoleName(f.getRole().getRole());
+			
 			listToShow.add(userRolesList.getRoleName());
 		});
 
@@ -245,7 +258,7 @@ public class UserController {
 	    Date date = new Date(); 
 	    
 	    try {
-	    	userxroleService.CreateUserXRole(date, userToAssign, roleToAssign);
+	    	userxroleService.CreateUserXRole(date, userToAssign, roleToAssign, true);
 	    	return new ResponseEntity<>(HttpStatus.CREATED);
 	    }catch(Exception e) {
 	    	e.printStackTrace();

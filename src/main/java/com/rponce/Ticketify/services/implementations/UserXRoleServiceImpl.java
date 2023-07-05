@@ -23,13 +23,13 @@ public class UserXRoleServiceImpl implements UserXRoleService {
 	
 	@Override
 	@Transactional(rollbackOn = Exception.class)
-	public void CreateUserXRole(Date date, User user, Role role) throws Exception {
+	public void CreateUserXRole(Date date, User user, Role role, Boolean status) throws Exception {
 		UserXRole newUserXRole = new UserXRole();
 		
 		newUserXRole.setAssignationDate(date);
 		newUserXRole.setRole(role);
 		newUserXRole.setUser(user);
-		newUserXRole.setStatus(true);
+		newUserXRole.setStatus(status);
 		
 		userXRolerepository.save(newUserXRole);
 		
