@@ -42,7 +42,7 @@ public class TicketQRServiceImpl implements TicketQRService{
 	@Override
 	public List<TicketQR> GetTicketQRByTicketId(UUID TicketId) {
 	
-		Ticket ticket = ticketRepository.findOneByUuid(TicketId);
+		Ticket ticket = ticketRepository.findFirstTicketByUuid(TicketId);
 		return ticketQRRepository.findAllByTicket(ticket);
 	}
 
