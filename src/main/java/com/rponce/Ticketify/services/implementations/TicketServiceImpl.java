@@ -29,7 +29,11 @@ public class TicketServiceImpl implements TicketService{
 	@Override
 	public Ticket getTicketByID(UUID uuid) {
 	
-		return ticketRepository.findFirstTicketByUuid(uuid);
+		try {
+			return ticketRepository.findOneTicketByUuid(uuid);
+		}catch(Exception e) {
+			return null;
+		}
 	
 	}
 
