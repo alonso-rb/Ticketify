@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rponce.Ticketify.models.dtos.FindQRByTicketDTO;
 import com.rponce.Ticketify.models.dtos.SaveTicketQRDTO;
 import com.rponce.Ticketify.models.dtos.TicketQRInfoDTO;
+import com.rponce.Ticketify.models.dtos.TicketQRInfoToSaveDTO;
 import com.rponce.Ticketify.models.entities.Ticket;
 import com.rponce.Ticketify.models.entities.TicketQR;
 import com.rponce.Ticketify.services.TicketQRService;
@@ -44,18 +45,21 @@ public class TicketQRController {
 	private TicketService ticketService;
 	
 	@PostMapping("/generate")
-	private ResponseEntity<?> SaveTicketQR(@ModelAttribute @Valid SaveTicketQRDTO info, 
+	private ResponseEntity<?> SaveTicketQR(@ModelAttribute @Valid SaveTicketQRDTO info,
 			BindingResult validations){
 		
 		Integer qr1 = new Date().hashCode();
 		String begginer = "QR-";
 		String qrhashed = begginer.concat(qr1.toString());
-		info.setQr(qrhashed);
+		
+		TicketQRInfoToSaveDTO infoToSave = new TicketQRInfoToSaveDTO();
+		
+		infoToSave.setQr(qrhashed);
 		
 		Date date = new Date();
-		info.setCreationDate(date);
-		info.setExchangeDate(date);
-		info.setActive(true);
+		infoToSave.setCreationDate(date);
+		infoToSave.setExchangeDate(date);
+		infoToSave.setActive(true);
 		
 		UUID uuid = UUID.fromString(info.getTicketId());
 		Ticket ticketId = ticketService.getTicketByID(uuid);
@@ -70,8 +74,8 @@ public class TicketQRController {
 		}
 		
 		try {
-			ticketqrService.SaveTicketQR(info, ticketId);
-			TicketQR qrticket = ticketqrService.getTicketQRByQR(info.getQr());
+			ticketqrService.SaveTicketQR(infoToSave, ticketId);
+			TicketQR qrticket = ticketqrService.getTicketQRByQR(infoToSave.getQr());
 
 			TicketQRInfoDTO response = new TicketQRInfoDTO();
 			response.setQr(qrticket.getQr());

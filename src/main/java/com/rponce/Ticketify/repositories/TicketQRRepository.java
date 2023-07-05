@@ -11,5 +11,5 @@ import com.rponce.Ticketify.models.entities.TicketQR;
 public interface TicketQRRepository extends ListCrudRepository<TicketQR, UUID>{
 	
 	List<TicketQR> findAllByTicket(Ticket ticket);
-	TicketQR findFirstTicketQRByQr(String qr);
+	TicketQR findOneByQr(String qr);
 }

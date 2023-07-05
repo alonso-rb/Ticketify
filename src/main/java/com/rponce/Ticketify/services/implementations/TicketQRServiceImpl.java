@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rponce.Ticketify.models.dtos.SaveTicketQRDTO;
+import com.rponce.Ticketify.models.dtos.TicketQRInfoToSaveDTO;
 import com.rponce.Ticketify.models.entities.Ticket;
 import com.rponce.Ticketify.models.entities.TicketQR;
 import com.rponce.Ticketify.repositories.TicketQRRepository;
@@ -27,7 +28,7 @@ public class TicketQRServiceImpl implements TicketQRService{
 	
 	@Override
 	@Transactional(rollbackOn = Exception.class)
-	public void SaveTicketQR(SaveTicketQRDTO info, Ticket ticketId) throws Exception {
+	public void SaveTicketQR(TicketQRInfoToSaveDTO info, Ticket ticketId) throws Exception {
 		
 		TicketQR ticketqr = new TicketQR();
 		ticketqr.setCreationDate(info.getCreationDate());
@@ -49,7 +50,7 @@ public class TicketQRServiceImpl implements TicketQRService{
 	@Override
 	public TicketQR getTicketQRByQR(String qr) {
 		
-		return ticketQRRepository.findFirstTicketQRByQr(qr);
+		return ticketQRRepository.findOneByQr(qr);
 	}
 
 }
