@@ -3,7 +3,6 @@ package com.rponce.Ticketify.services;
 import java.util.List;
 import java.util.UUID;
 
-import com.rponce.Ticketify.models.dtos.SaveTicketQRDTO;
 import com.rponce.Ticketify.models.dtos.TicketQRInfoToSaveDTO;
 import com.rponce.Ticketify.models.entities.Ticket;
 import com.rponce.Ticketify.models.entities.TicketQR;

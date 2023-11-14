@@ -1,6 +1,5 @@
 package com.rponce.Ticketify.models.entities;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "event")
-@ToString(exclude = {"involved", "sponsors"})
+@ToString(exclude = { "involved", "sponsors" })
 public class Event {
 
 	@Id
@@ -57,15 +56,15 @@ public class Event {
 
 	@Column(name = "address")
 	private String address;
-	
+
 	@OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Involved> involved;
-	
+
 	@OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Sponsor> sponsors;
-	
+
 	@OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Tier> tiers;

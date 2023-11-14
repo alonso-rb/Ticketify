@@ -1,7 +1,5 @@
 package com.rponce.Ticketify.models.dtos;
 
-import java.util.Date;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -1,13 +1,11 @@
 package com.rponce.Ticketify.services.implementations;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rponce.Ticketify.models.dtos.SaveTicketQRDTO;
 import com.rponce.Ticketify.models.dtos.TicketQRInfoToSaveDTO;
 import com.rponce.Ticketify.models.entities.Ticket;
 import com.rponce.Ticketify.models.entities.TicketQR;

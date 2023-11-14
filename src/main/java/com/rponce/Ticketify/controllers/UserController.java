@@ -1,6 +1,5 @@
 package com.rponce.Ticketify.controllers;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +26,6 @@ import com.rponce.Ticketify.models.dtos.AuthUserDTO;
 import com.rponce.Ticketify.models.dtos.RecuperatePasswordDTO;
 import com.rponce.Ticketify.models.dtos.ReturnUserRoleDTO;
 import com.rponce.Ticketify.models.dtos.SaveUserDTO;
-import com.rponce.Ticketify.models.dtos.TokenDTO;
 import com.rponce.Ticketify.models.dtos.UpdatePasswordDTO;
 import com.rponce.Ticketify.models.dtos.UserInfoDTO;
 import com.rponce.Ticketify.models.dtos.UserRolesDTO;
@@ -47,42 +44,37 @@ import jakarta.validation.Valid;
 @RequestMapping("/user")
 @CrossOrigin("*")
 public class UserController {
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RoleService roleService;
-	
-	@Autowired 
+
+	@Autowired
 	private UserXRoleService userxroleService;
-	
+
 	@Autowired
 	private RequestErrorHandler errorHandler;
-	
+
 	@Autowired
 	private JavaMailSender mailSender;
-	
+
 	private String recoverCode;
 
 	@PostMapping("/auth/signup")
-	private ResponseEntity<?> SignUpUser (@ModelAttribute @Valid SaveUserDTO info, BindingResult validations){
-		
+	private ResponseEntity<?> SignUpUser(@ModelAttribute @Valid SaveUserDTO info, BindingResult validations) {
+
 		User existingUser = userService.FindOneUserByEmail(info.getEmail());
-		
-		if(validations.hasErrors()) {
-			return new ResponseEntity<>(
-						errorHandler.mapErrors(validations.getFieldErrors()),
-						HttpStatus.BAD_REQUEST
-					);
+
+		if (validations.hasErrors()) {
+			return new ResponseEntity<>(errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST);
 		}
-		
-		if(existingUser != null) {
-			return new ResponseEntity<>(
-					HttpStatus.BAD_REQUEST
-					);
+
+		if (existingUser != null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		try {
 			userService.SaveUser(info);
 			User userToAssignUser = userService.FindOneUserByEmail(info.getEmail());
@@ -92,131 +84,72 @@ public class UserController {
 			userxroleService.CreateUserXRole(new Date(), userToAssignUser, role1, true);
 			userxroleService.CreateUserXRole(new Date(), userToAssignUser, role2, false);
 			userxroleService.CreateUserXRole(new Date(), userToAssignUser, role3, false);
-			return new ResponseEntity<>(
-					HttpStatus.CREATED
-					);
-		} catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@GetMapping("/all")
-	private ResponseEntity<?> GetAllUsers(){
+	private ResponseEntity<?> GetAllUsers() {
 		List<User> allUsers = userService.GetAllUsers();
-		return new ResponseEntity<>(
-				allUsers, HttpStatus.OK
-				);
+		return new ResponseEntity<>(allUsers, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/id/{id}")
-	private ResponseEntity<?> GetUserById(@PathVariable(name = "id") UUID id){
-		
+	private ResponseEntity<?> GetUserById(@PathVariable(name = "id") UUID id) {
+
 		User userToFind = userService.FindOneUserById(id.toString());
-		
-		return new ResponseEntity<>(
-				userToFind, HttpStatus.OK
-				);
+
+		return new ResponseEntity<>(userToFind, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/email/{email}")
-	private ResponseEntity<?> GetUserByEmail(@PathVariable(name = "email") String email){
-		
+	private ResponseEntity<?> GetUserByEmail(@PathVariable(name = "email") String email) {
+
 		User userToFind = userService.FindOneUserByEmail(email);
-		
-		return new ResponseEntity<>(
-				userToFind, HttpStatus.OK
-				);
+
+		return new ResponseEntity<>(userToFind, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/deactivate/{id}")
-	private ResponseEntity<?> DeactivateUser(@PathVariable(name = "id") UUID id){
-		
+	private ResponseEntity<?> DeactivateUser(@PathVariable(name = "id") UUID id) {
+
 		User userToDeactivate = userService.FindOneUserById(id.toString());
-		
+
 		try {
 			userService.DeactivateUser(userToDeactivate);
 			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
-	}
-	
-	@PostMapping("/auth/signin")
-	private ResponseEntity<?> AuthUser(@ModelAttribute @Valid AuthUserDTO info, BindingResult validations){
-		User userToCheck = userService.AuthUser(info);
-		
-		if(validations.hasErrors()) {
-			return new ResponseEntity<>(
-						errorHandler.mapErrors(validations.getFieldErrors()),
-						HttpStatus.BAD_REQUEST
-					);
-		}
-		
-		if(userToCheck == null) {
-			return new ResponseEntity<>(
-					HttpStatus.NOT_FOUND
-					);
-		}
-		
-		List<String> listToShow = new ArrayList<>();
-		List<UserXRole> userxroleList = userxroleService.findByUser(userToCheck);
-		
-		List<UserXRole> filteredList = userxroleList.stream()
-										.filter(u->u.getStatus().equals(true))
-										.collect(Collectors.toList());
-		
-		filteredList.forEach(f-> {
-			ReturnUserRoleDTO userRolesList = new ReturnUserRoleDTO();
-			userRolesList.setRoleName(f.getRole().getRole());
-			
-			listToShow.add(userRolesList.getRoleName());
-		});
-		
-		try {
-			Token token = userService.registerToken(userToCheck);
-			UserInfoDTO infoUser = new UserInfoDTO();
-			infoUser.setToken(token.getContent());
-			infoUser.setRoleName(listToShow);
-			infoUser.setId(userToCheck.getUuid().toString());
-			return new ResponseEntity<>(infoUser, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-	}
-	
-	@PostMapping("/auth/google/signin")
-	private ResponseEntity<?> AuthGoogleUser(@ModelAttribute @Valid AuthUserDTO info, BindingResult validations){
-		User userToCheck = userService.FindOneUserByEmail(info.getEmail());
 
-		if(validations.hasErrors()) {
-			return new ResponseEntity<>(
-						errorHandler.mapErrors(validations.getFieldErrors()),
-						HttpStatus.BAD_REQUEST
-					);
+	}
+
+	@PostMapping("/auth/signin")
+	private ResponseEntity<?> AuthUser(@ModelAttribute @Valid AuthUserDTO info, BindingResult validations) {
+		User userToCheck = userService.AuthUser(info);
+
+		if (validations.hasErrors()) {
+			return new ResponseEntity<>(errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST);
 		}
 
-		if(userToCheck == null) {
-			return new ResponseEntity<>(
-					HttpStatus.NOT_FOUND
-					);
+		if (userToCheck == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 		List<String> listToShow = new ArrayList<>();
 		List<UserXRole> userxroleList = userxroleService.findByUser(userToCheck);
-		
-		List<UserXRole> filteredList = userxroleList.stream()
-				.filter(u->u.getStatus().equals(true))
+
+		List<UserXRole> filteredList = userxroleList.stream().filter(u -> u.getStatus().equals(true))
 				.collect(Collectors.toList());
 
-		filteredList.forEach(f-> {
+		filteredList.forEach(f -> {
 			ReturnUserRoleDTO userRolesList = new ReturnUserRoleDTO();
 			userRolesList.setRoleName(f.getRole().getRole());
-			
+
 			listToShow.add(userRolesList.getRoleName());
 		});
 
@@ -233,54 +166,89 @@ public class UserController {
 		}
 
 	}
-	
-	@PostMapping("/userroles/save")
-	private ResponseEntity<?> AssingRoles(@ModelAttribute @Valid AssignRolesToUserDTO info, 
-			BindingResult validations){
-		
-		if(validations.hasErrors()) {
-			return new ResponseEntity<>(
-					errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST
-					);
+
+	@PostMapping("/auth/google/signin")
+	private ResponseEntity<?> AuthGoogleUser(@ModelAttribute @Valid AuthUserDTO info, BindingResult validations) {
+		User userToCheck = userService.FindOneUserByEmail(info.getEmail());
+
+		if (validations.hasErrors()) {
+			return new ResponseEntity<>(errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST);
 		}
-		
+
+		if (userToCheck == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<String> listToShow = new ArrayList<>();
+		List<UserXRole> userxroleList = userxroleService.findByUser(userToCheck);
+
+		List<UserXRole> filteredList = userxroleList.stream().filter(u -> u.getStatus().equals(true))
+				.collect(Collectors.toList());
+
+		filteredList.forEach(f -> {
+			ReturnUserRoleDTO userRolesList = new ReturnUserRoleDTO();
+			userRolesList.setRoleName(f.getRole().getRole());
+
+			listToShow.add(userRolesList.getRoleName());
+		});
+
+		try {
+			Token token = userService.registerToken(userToCheck);
+			UserInfoDTO infoUser = new UserInfoDTO();
+			infoUser.setToken(token.getContent());
+			infoUser.setRoleName(listToShow);
+			infoUser.setId(userToCheck.getUuid().toString());
+			return new ResponseEntity<>(infoUser, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@PostMapping("/userroles/save")
+	private ResponseEntity<?> AssingRoles(@ModelAttribute @Valid AssignRolesToUserDTO info, BindingResult validations) {
+
+		if (validations.hasErrors()) {
+			return new ResponseEntity<>(errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST);
+		}
+
 		User userToAssign = userService.FindOneUserById(info.getUserCode());
 		Role roleToAssign = roleService.GetRoleByName(info.getRoleName());
-		
-		if(userToAssign == null) {
+
+		if (userToAssign == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-		if(roleToAssign == null) {
+
+		if (roleToAssign == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
-	    Date date = new Date(); 
-	    
-	    try {
-	    	userxroleService.CreateUserXRole(date, userToAssign, roleToAssign, true);
-	    	return new ResponseEntity<>(HttpStatus.CREATED);
-	    }catch(Exception e) {
-	    	e.printStackTrace();
-	    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	    }
-		
+
+		Date date = new Date();
+
+		try {
+			userxroleService.CreateUserXRole(date, userToAssign, roleToAssign, true);
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 	}
-	
+
 	@PostMapping("/request-recuperate")
-	private ResponseEntity<?> RequestPasswordChange(String email){
-		
-		
+	private ResponseEntity<?> RequestPasswordChange(String email) {
+
 		User userToUpdate = userService.FindOneUserByEmail(email);
-		
-		if(userToUpdate == null) {
+
+		if (userToUpdate == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		Integer hash = new Date().hashCode();
 		String codeRecover = "UP-".concat(hash.toString());
-		
-		//Sending recover Email
+
+		// Sending recover Email
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom("ticketifysv@gmail.com");
 		message.setTo(email);
@@ -288,73 +256,68 @@ public class UserController {
 		message.setText("Saludos, favor ingresa el código enviado a través de este correo "
 				+ "para que tu cambio de contraseña sea aprobado: ".concat(codeRecover));
 		mailSender.send(message);
-	
+
 		this.recoverCode = codeRecover;
-		
-		return new ResponseEntity<>(email, HttpStatus.OK);		
+
+		return new ResponseEntity<>(email, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/recuperate-password")
-	private ResponseEntity<?> RecuperatePassword(@ModelAttribute @Valid RecuperatePasswordDTO info, 
+	private ResponseEntity<?> RecuperatePassword(@ModelAttribute @Valid RecuperatePasswordDTO info,
 			BindingResult validations) {
-		
-		if(validations.hasErrors()) {
-			return new ResponseEntity<>(
-					errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST
-					);
+
+		if (validations.hasErrors()) {
+			return new ResponseEntity<>(errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST);
 		}
-		
+
 		User userToUpdate = userService.FindOneUserByEmail(info.getEmail());
-		
-		if(userToUpdate == null) {
+
+		if (userToUpdate == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		System.out.println(recoverCode);
 		System.out.println(info.getCode());
-		
-		if(!recoverCode.equals(info.getCode())) {
+
+		if (!recoverCode.equals(info.getCode())) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		try {
 			userService.RecuperatePassword(info, userToUpdate);
 			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 	}
-	
-	
+
 	@PostMapping("/update-password")
-	private ResponseEntity<?> UpdatePassword(@ModelAttribute @Valid UpdatePasswordDTO info, BindingResult validations){
-		
-		if(validations.hasErrors()) {
-			return new ResponseEntity<>(
-					errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST
-					);
+	private ResponseEntity<?> UpdatePassword(@ModelAttribute @Valid UpdatePasswordDTO info, BindingResult validations) {
+
+		if (validations.hasErrors()) {
+			return new ResponseEntity<>(errorHandler.mapErrors(validations.getFieldErrors()), HttpStatus.BAD_REQUEST);
 		}
-		
+
 		User userToUpdate = userService.findUserAuthenticated();
-		
+
 		try {
 			userService.UpdatePassword(info, userToUpdate);
 			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@GetMapping("/userroles/all")
-	private ResponseEntity<?> AllRolesFromUsers(){
-		
+	private ResponseEntity<?> AllRolesFromUsers() {
+
 		List<UserRolesDTO> listToShow = new ArrayList<>();
 		List<UserXRole> userxroleList = userxroleService.getAllUserXRole();
-		
-		userxroleList.forEach(u-> {
+
+		userxroleList.forEach(u -> {
 			UserRolesDTO userRolesList = new UserRolesDTO();
 			userRolesList.setUserId(u.getUser().getUuid().toString());
 			userRolesList.setUserName(u.getUser().getFirstname().concat(" ").concat(u.getUser().getLastname()));
@@ -362,27 +325,25 @@ public class UserController {
 			userRolesList.setRoleAssigned(u.getRole().getRole());
 			userRolesList.setDateAssigned(u.getAssignationDate());
 			userRolesList.setStatus(u.getStatus());
-			
+
 			listToShow.add(userRolesList);
 		});
-		
-		return new ResponseEntity<>(
-				listToShow, HttpStatus.OK
-				);
+
+		return new ResponseEntity<>(listToShow, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/userroles/{rolename}")
-	private ResponseEntity<?> AllUserFromOneRole(@PathVariable(name="rolename") String role){
+	private ResponseEntity<?> AllUserFromOneRole(@PathVariable(name = "rolename") String role) {
 		Role roleToSearch = roleService.GetRoleByName(role);
-		
-		if(roleToSearch == null) {
+
+		if (roleToSearch == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		List<UserRolesDTO> listToShow = new ArrayList<>();
 		List<UserXRole> userxroleList = userxroleService.findByRole(roleToSearch);
-		
-		userxroleList.forEach(u-> {
+
+		userxroleList.forEach(u -> {
 			UserRolesDTO userRolesList = new UserRolesDTO();
 			userRolesList.setUserId(u.getUser().getUuid().toString());
 			userRolesList.setUserName(u.getUser().getFirstname().concat(" ").concat(u.getUser().getLastname()));
@@ -390,30 +351,28 @@ public class UserController {
 			userRolesList.setRoleAssigned(u.getRole().getRole());
 			userRolesList.setDateAssigned(u.getAssignationDate());
 			userRolesList.setStatus(u.getStatus());
-			
+
 			listToShow.add(userRolesList);
 		});
-		
-		return new ResponseEntity<>(
-				listToShow, HttpStatus.OK
-				);
+
+		return new ResponseEntity<>(listToShow, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/userroles/delete/{userid}/{rolename}")
-	private ResponseEntity<?> DeleteRoleFromUser(@PathVariable(name = "userid") String userid, 
-			@PathVariable(name = "rolename") String rolename){
-		
+	private ResponseEntity<?> DeleteRoleFromUser(@PathVariable(name = "userid") String userid,
+			@PathVariable(name = "rolename") String rolename) {
+
 		User user = userService.FindOneUserById(userid);
 		Role roleToDelete = roleService.GetRoleByName(rolename);
-		
-		if(user == null || roleToDelete == null) {
+
+		if (user == null || roleToDelete == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		try {
 			userxroleService.DeleteRolesFromUser(user, roleToDelete);
 			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
