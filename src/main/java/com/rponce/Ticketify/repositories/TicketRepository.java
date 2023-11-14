@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.ListCrudRepository;
 
 import com.rponce.Ticketify.models.entities.Order;
 import com.rponce.Ticketify.models.entities.Ticket;

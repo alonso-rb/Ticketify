@@ -1,6 +1,5 @@
 package com.rponce.Ticketify.models.entities;
 
-import java.util.Currency;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +23,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "tier")
-@ToString(exclude = {"tickets"})
+@ToString(exclude = { "tickets" })
 public class Tier {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,17 +32,17 @@ public class Tier {
 
 	@Column(name = "tier")
 	private String tier;
-	
+
 	@Column(name = "price")
 	private Float price;
-	
+
 	@Column(name = "capacity")
 	private int capacity;
 
 	@JoinColumn(name = "id_event")
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Event event;
-	
+
 	@OneToMany(mappedBy = "tier", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Ticket> tickets;

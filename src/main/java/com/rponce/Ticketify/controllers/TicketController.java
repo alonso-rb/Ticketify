@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +22,6 @@ import com.rponce.Ticketify.models.entities.Order;
 import com.rponce.Ticketify.models.entities.Ticket;
 import com.rponce.Ticketify.models.entities.Tier;
 import com.rponce.Ticketify.models.entities.User;
-import com.rponce.Ticketify.services.EventService;
 import com.rponce.Ticketify.services.OrderService;
 import com.rponce.Ticketify.services.TicketService;
 import com.rponce.Ticketify.services.TierService;
