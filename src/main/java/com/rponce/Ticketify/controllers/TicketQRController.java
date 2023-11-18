@@ -85,7 +85,7 @@ public class TicketQRController {
 			response.setTierName(qrticket.getTicket().getTier().getTier());
 			response.setTime(qrticket.getTicket().getTier().getEvent().getHour());
 
-			return new ResponseEntity<>(response, HttpStatus.OK);
+			return new ResponseEntity<>(qrticket, HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

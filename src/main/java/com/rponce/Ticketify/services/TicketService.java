@@ -15,6 +15,7 @@ public interface TicketService {
 	public void ActivateTicket(List<Ticket> tickets) throws Exception;
 	public void UpdateTicketOwner(Ticket ticket, User newUser, Date changeDate);
 	public void DeleteTicket(Ticket ticket);
+	public void ExchangeTicket(Ticket ticket);
 	List<Ticket> getAllTickets();
 	Ticket getTicketByID(UUID uuid);
 	List<Ticket> getTicketsByUser(User user);
