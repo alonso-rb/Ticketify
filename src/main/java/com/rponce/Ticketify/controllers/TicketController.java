@@ -16,13 +16,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rponce.Ticketify.models.dtos.ExchangeTicketDTO;
 import com.rponce.Ticketify.models.dtos.SaveTicketDTO;
 import com.rponce.Ticketify.models.dtos.ShowOrderDTO;
 import com.rponce.Ticketify.models.entities.Order;
 import com.rponce.Ticketify.models.entities.Ticket;
+import com.rponce.Ticketify.models.entities.TicketQR;
 import com.rponce.Ticketify.models.entities.Tier;
 import com.rponce.Ticketify.models.entities.User;
 import com.rponce.Ticketify.services.OrderService;
+import com.rponce.Ticketify.services.TicketQRService;
 import com.rponce.Ticketify.services.TicketService;
 import com.rponce.Ticketify.services.TierService;
 import com.rponce.Ticketify.services.UserService;
@@ -46,6 +49,9 @@ public class TicketController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private TicketQRService ticketqrService;
 	
 	@Autowired
 	private RequestErrorHandler errorHandler;
@@ -97,6 +103,29 @@ public class TicketController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+	}
+	
+	@PostMapping("/exchange")
+	private ResponseEntity<?> ExchangeTicket(@ModelAttribute @Valid ExchangeTicketDTO info, BindingResult validation){
+		
+		Ticket ticket = ticketqrService.getTicketQRByQR(info.getQr()).getTicket();
+		
+		if(ticket == null) {
+			return new ResponseEntity<>("No fue encontrado el Ticket", HttpStatus.BAD_REQUEST);
+		}
+		
+		if(ticket.getState() == false) {
+			return new ResponseEntity<>("Ticket ya fue canjeado", HttpStatus.BAD_REQUEST);
+		}
+		
+		try {
+			ticketService.ExchangeTicket(ticket);
+			Ticket infoToSend = ticketService.getTicketByID(ticket.getUuid());
+			return new ResponseEntity<>(infoToSend, HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 	}
 	
 	@PostMapping("/finish")
