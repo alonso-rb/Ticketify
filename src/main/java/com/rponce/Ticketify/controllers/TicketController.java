@@ -179,21 +179,6 @@ public class TicketController {
 		return new ResponseEntity<>(ticketService.getAllTickets(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/activated")
-	private ResponseEntity<?> GetActivatedTickets() {
-		if(ticketService.getAllTickets() == null) {
-			return new ResponseEntity<>(
-					HttpStatus.NOT_FOUND
-					);
-		}
-		
-		List<Ticket> ticketlist = ticketService.getAllTickets();
-		List<Ticket> filteredlist = ticketlist.stream().filter(t-> t.getState().equals(true))
-														.collect(Collectors.toList());
-		
-		return new ResponseEntity<>(filteredlist, HttpStatus.OK);
-	}
-	
 	@GetMapping("/ticketid/{id}")
 	private ResponseEntity<?> GetTicketById(@PathVariable(name = "id") String id){
 		
@@ -219,7 +204,12 @@ public class TicketController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<>(ticketService.getTicketsByUser(user), HttpStatus.OK);
+		
+		List<Ticket> ticketlist = ticketService.getTicketsByUser(user);
+		List<Ticket> filteredlist = ticketlist.stream().filter(t-> t.getState().equals(true))
+				.collect(Collectors.toList());
+		
+		return new ResponseEntity<>(filteredlist, HttpStatus.OK);
 		
 	}
 	
