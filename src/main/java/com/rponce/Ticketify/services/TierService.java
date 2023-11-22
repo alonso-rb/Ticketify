@@ -9,6 +9,7 @@ import com.rponce.Ticketify.models.entities.Tier;
 public interface TierService {
 	void saveTier(SaveTierDTO info, Event event) throws Exception;
 	Tier findOneById(String id);
+	void updateTier(Tier tier, int cantidad);
 	List<Tier> findAllTier();
 	void deleteTier(String id) throws Exception;
 	List<Tier> findByEvent(Event event);

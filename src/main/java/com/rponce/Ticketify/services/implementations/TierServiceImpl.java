@@ -66,5 +66,14 @@ public class TierServiceImpl implements TierService{
 			return null;
 		}
 	}
+
+	@Override
+	public void updateTier(Tier tier, int cantidad) {
+		//actualizo la capacidad de la tier
+		tier.setCapacity(tier.getCapacity() - cantidad);
+		//guardo las modificaciones de la tier en la base de datos
+		tierRepository.save(tier);	
+		
+	}
 	
 }
