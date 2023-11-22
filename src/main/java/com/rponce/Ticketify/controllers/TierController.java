@@ -6,20 +6,24 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rponce.Ticketify.models.dtos.SaveTierDTO;
+import com.rponce.Ticketify.models.dtos.UpdateTierDTO;
 import com.rponce.Ticketify.models.entities.Event;
 import com.rponce.Ticketify.models.entities.Tier;
 import com.rponce.Ticketify.services.EventService;
 import com.rponce.Ticketify.services.TierService;
+import com.rponce.Ticketify.utils.RequestErrorHandler;
 
 import jakarta.validation.Valid;
 
@@ -33,6 +37,9 @@ public class TierController {
 	
 	@Autowired
 	private EventService eventService;
+	
+	@Autowired
+	private RequestErrorHandler errorHandler;
 	
 	@GetMapping("/")
 	public ResponseEntity<?> findAll() {
@@ -104,7 +111,36 @@ public class TierController {
 	}
 	
 	
-	
+	@PutMapping("/{tier}")
+	public ResponseEntity<?> updateTier(@PathVariable(name = "tier") String tierId, 
+			@ModelAttribute @Valid UpdateTierDTO info, BindingResult validations ){
+
+		if(validations.hasErrors()) {
+			return new ResponseEntity<>(errorHandler.mapErrors(validations.getFieldErrors()),
+			HttpStatus.BAD_REQUEST);
+		}
+
+
+		//Busco la tier mediante la Id
+		Tier tierFound = tierService.findOneById(tierId);
+
+		//verifico que exista
+		if (tierFound == null) {
+			return new ResponseEntity<>("The tier was not found",HttpStatus.NOT_FOUND);
+		}
+
+		//Actualizo los valores del tier
+
+		tierFound.setTier(info.getName());
+		tierFound.setCapacity(info.getCapacity());
+		tierFound.setPrice(info.getPrice());
+
+		//actualizo la tier en la base de datos
+		tierService.updateTier(tierFound);
+
+		return new ResponseEntity<>("Update tier ",HttpStatus.OK);
+
+	}
 	
 	
 	

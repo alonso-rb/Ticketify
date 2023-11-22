@@ -93,7 +93,7 @@ public class TicketController {
 			}
 			
 			
-			tierService.updateTier(tierTicket, number);
+			tierService.updateTierCapacity(tierTicket, number);
 			
 			
 			ShowOrderDTO order = new ShowOrderDTO();
