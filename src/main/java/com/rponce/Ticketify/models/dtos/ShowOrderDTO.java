@@ -17,8 +17,6 @@ public class ShowOrderDTO {
 	
 	private Float subtotal;
 	
-	private Float taxes;
-	
 	private Float total;
 
 }

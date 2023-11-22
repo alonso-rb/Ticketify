@@ -68,7 +68,6 @@ public class TicketController {
 		User userTicket = userService.findUserAuthenticated();
 		Tier tierTicket = tierService.findOneById(info.getTierId());
 		Float totalPrice = tierTicket.getPrice()*number;
-		Float taxes = 10.00f;
 		
 		if(validation.hasErrors()) {
 			return new ResponseEntity<>(errorHandler.mapErrors(validation.getFieldErrors()), 
@@ -76,26 +75,34 @@ public class TicketController {
 		}
 		
 		if(userTicket == null || tierTicket == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("The user or tier does not exist",HttpStatus.BAD_REQUEST);
+		}
+		
+		//validando que la cantidad de tickets no sobrepase la cantidad del tier
+		if (number > tierTicket.getCapacity()) {
+			return new ResponseEntity<>("The purchase exceeds the limits available in the tier",HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		try {
 			//Create Order
-			orderService.SaveOrder(totalPrice+taxes, userTicket, date);
-			Order currOrder = orderService.findCurrentOrder(totalPrice+taxes, userTicket, date);
+			orderService.SaveOrder(totalPrice, userTicket, date);
+			Order currOrder = orderService.findCurrentOrder(totalPrice, userTicket, date);
 			
 			for(int i = 0; i < number; i++) {
 				ticketService.SaveTicket(userTicket, tierTicket, date, currOrder, false);
 			}
+			
+			
+			tierService.updateTier(tierTicket, number);
+			
 			
 			ShowOrderDTO order = new ShowOrderDTO();
 			order.setId(currOrder.getUuid().toString());
 			order.setEventName(tierTicket.getEvent().getTitle());
 			order.setTier(tierTicket.getTier());
 			order.setSubtotal(totalPrice);
-			order.setTaxes(taxes);
 			order.setTotalTickets(number);
-			order.setTotal(totalPrice+taxes);
+			order.setTotal(totalPrice);
 			
 			return new ResponseEntity<>(order, HttpStatus.OK);
 			
